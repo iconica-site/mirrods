@@ -529,6 +529,17 @@ if (footerInfo && footerTopInner) {
   });
 }
 
+const placingFormPaymentInfo = document.querySelector(".placing-payment__info");
+const placingFormDelivery = document.querySelector(".placing-delivery");
+
+if (placingFormPaymentInfo && placingFormDelivery) {
+  const move = new Move({
+    destinationSelector: ".placing-delivery",
+    targetSelector: ".placing-payment__info",
+    index: "first",
+  });
+}
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts/counter.js
 /** @type {NodeListOf<HTMLDivElement} */
 const counters = document.querySelectorAll(".counter");
