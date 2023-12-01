@@ -529,7 +529,58 @@ if (footerInfo && footerTopInner) {
   });
 }
 
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/counter.js
+/** @type {NodeListOf<HTMLDivElement} */
+const counters = document.querySelectorAll(".counter");
+const inputEvent = new Event("input");
+
+counters?.forEach(counter => {
+  /** @type {HTMLButtonElement} */
+  const minusButton = counter.querySelector(".counter__button--minus");
+  /** @type {HTMLButtonElement} */
+  const plusButton = counter.querySelector(".counter__button--plus");
+  const input = counter.querySelector("input");
+  /** @type {HTMLLabelElement} */
+  const label = counter.querySelector(".counter__label");
+
+  if (minusButton && plusButton && input && label) {
+    const { min, max } = input;
+
+    minusButton.addEventListener("click", () => {
+      changeInputValue("minus");
+    });
+
+    plusButton.addEventListener("click", () => {
+      changeInputValue("plus");
+    });
+
+    input.addEventListener("input", () => {
+      let { value } = input;
+
+      value = +value;
+      value = Math.trunc(value);
+
+      if (value < min) value = min;
+      if (value > max) value = max;
+
+      input.value = value;
+      label.innerText = input.value;
+      label.classList.toggle("counter__label--wide", `${value}`.length > 1);
+    });
+
+    /** @param {"minus" | "plus"} action */
+    function changeInputValue(action) {
+      let { value } = input;
+
+      value = +value;
+      input.value = action === "minus" ? --value : ++value;
+      input.dispatchEvent(inputEvent);
+    }
+  }
+});
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts.js
+
 
 
 
