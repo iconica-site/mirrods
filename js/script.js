@@ -590,7 +590,96 @@ counters?.forEach(counter => {
   }
 });
 
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/options.js
+/** @type {HTMLFormElement} */
+const optionsForm = document.querySelector(".options-form");
+
+if (optionsForm) {
+  /** @type {NodeListOf<HTMLInputElement>} */
+  const inscriptionRadioInputs = optionsForm.querySelectorAll("input[data-inscription]");
+  /** @type {HTMLDivElement} */
+  const inscriptionExample = optionsForm.querySelector(".options-example");
+
+  if (inscriptionRadioInputs.length && inscriptionExample) {
+    inscriptionRadioInputs.forEach(inscriptionRadioInput => {
+      inscriptionRadioInput.addEventListener("change", () => {
+        /** @type {HTMLInputElement} */
+        const checkedRadio = [...inscriptionRadioInputs].find(
+          /** @param {HTMLInputElement} radio */
+          radio => {
+            return radio.checked;
+          }
+        );
+        const { dataset } = checkedRadio;
+        const { inscription } = dataset;
+
+        inscriptionExample.toggleAttribute("disabled", inscription !== "with");
+      });
+    });
+  }
+
+  /** @type {HTMLButtonElement} */
+  const optionsExampleButton = optionsForm.querySelector(".options-example__button");
+  /** @type {HTMLDivElement} */
+  const textExamples = optionsForm.querySelector(".example-texts");
+
+  if (optionsExampleButton && textExamples) {
+    optionsExampleButton.addEventListener("click", () => {
+      textExamples.classList.add("show");
+    });
+
+    /** @type {NodeListOf<HTMLButtonElement>} */
+    const inscriptionButtons = textExamples.querySelectorAll(".example-texts__inscription");
+    /** @type {HTMLDivElement} */
+    const optionsExampleText = optionsForm.querySelector(".options-example__text");
+    /** @type {HTMLInputElement} */
+    const optionsExampleInput = optionsForm.querySelector("[data-example-input]");
+
+    if (inscriptionButtons && optionsExampleText && optionsExampleInput) {
+      textExamples.addEventListener("click", event => {
+        /** @type {{target: HTMLElement}} */
+        const { target } = event;
+
+        if (target.closest(".example-texts__inscription")) {
+          /** @type {HTMLButtonElement} */
+          const clickedButton = target.closest(".example-texts__inscription");
+
+          inscriptionButtons?.forEach(button => {
+            button.classList.toggle("example-texts__inscription--checked", clickedButton === button);
+          });
+        }
+
+        if (!target.closest(".example-texts__inner") || target.closest(".example-texts__close")) {
+          textExamples.classList.remove("show");
+        }
+
+        if (target.closest(".example-texts__button")) {
+          /** @type {HTMLButtonElement} */
+          const checkedButton = [...inscriptionButtons].find(
+            /** @param {HTMLButtonElement} button */
+            button => {
+              return button.classList.contains("example-texts__inscription--checked");
+            }
+          );
+          const { innerText } = checkedButton;
+
+          optionsExampleText.innerText = innerText;
+          optionsExampleInput.value = innerText;
+          textExamples.classList.remove("show");
+        }
+      });
+
+      document.addEventListener("keydown", event => {
+        const { code } = event;
+
+        if (code === "Escape") textExamples.classList.remove("show");
+      });
+    }
+  }
+}
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts.js
+
 
 
 
