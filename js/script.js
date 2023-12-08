@@ -1157,7 +1157,22 @@ var spoilers = __webpack_require__(635);
 
 const spoilers_spoilers = new spoilers/* Spoilers */.r();
 
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/feedbacks.js
+/** @type {HTMLInputElement} */
+const feedbacksCheckbox = document.querySelector(".feedbacks-form__checkbox input");
+/** @type {HTMLButtonElement} */
+const feedbacksButton = document.querySelector(".feedbacks-form__button");
+
+if (feedbacksCheckbox && feedbacksButton) {
+  feedbacksCheckbox.addEventListener("change", () => {
+    const { checked } = feedbacksCheckbox;
+
+    feedbacksButton.toggleAttribute("disabled", !checked);
+  });
+}
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts.js
+
 
 
 
