@@ -65,6 +65,7 @@ if (productMainImageBlock && productImages.length) {
 
     productMainImageBlock.addEventListener("click", () => {
       const { currentSrc: mainSrc } = productMainImage;
+
       const imageIndex = [...productImages].findIndex(
         /** @param {HTMLImageElement} productImageBlock */
         productImageBlock => {

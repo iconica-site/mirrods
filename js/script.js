@@ -1173,23 +1173,29 @@ if (feedbacksCheckbox && feedbacksButton) {
 
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts/product.js
 /** @type {HTMLImageElement} */
-const productMainImage = document.querySelector(".product-images__image img");
+const productMainImageBlock = document.querySelector(".product-images__image");
 /** @type {NodeListOf<HTMLLIElement>} */
 const productImages = document.querySelectorAll(".product-images__thumb");
 
-if (productMainImage && productImages.length) {
+if (productMainImageBlock && productImages.length) {
+  const productMainImage = productMainImageBlock.querySelector("img");
+  const productMainPicture = productMainImageBlock.querySelector("source");
+
   productImages.forEach(productImageBlock => {
     const productImage = productImageBlock.querySelector("img");
+    const productPicture = productImageBlock.querySelector("source");
 
-    if (productImage) {
-      const { currentSrc } = productImage;
+    if (productImage || productPicture) {
+      const src = productImage?.src;
+      const srcset = productPicture?.srcset;
 
       productImageBlock.addEventListener("click", () => {
-        productMainImage.src = currentSrc;
+        if (productMainImage && src) productMainImage.src = src;
+        if (productMainPicture && srcset) productMainPicture.srcset = srcset;
 
         productImages.forEach(image => {
           image.classList.toggle("product-images__thumb--active", image === productImageBlock);
-        })
+        });
       });
     }
   });
