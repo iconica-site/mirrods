@@ -1171,7 +1171,32 @@ if (feedbacksCheckbox && feedbacksButton) {
   });
 }
 
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/product.js
+/** @type {HTMLImageElement} */
+const productMainImage = document.querySelector(".product-images__image img");
+/** @type {NodeListOf<HTMLLIElement>} */
+const productImages = document.querySelectorAll(".product-images__thumb");
+
+if (productMainImage && productImages.length) {
+  productImages.forEach(productImageBlock => {
+    const productImage = productImageBlock.querySelector("img");
+
+    if (productImage) {
+      const { currentSrc } = productImage;
+
+      productImageBlock.addEventListener("click", () => {
+        productMainImage.src = currentSrc;
+
+        productImages.forEach(image => {
+          image.classList.toggle("product-images__thumb--active", image === productImageBlock);
+        })
+      });
+    }
+  });
+}
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts.js
+
 
 
 

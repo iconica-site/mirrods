@@ -42,6 +42,50 @@ var __webpack_exports__ = {};
 /* harmony import */ var fslightbox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(213);
 
 
+/** @type {HTMLImageElement} */
+const productMainImageBlock = document.querySelector(".product-images__image");
+/** @type {NodeListOf<HTMLLIElement>} */
+const productImages = document.querySelectorAll(".product-images__thumb");
+
+if (productMainImageBlock && productImages.length) {
+  const productMainImage = productMainImageBlock.querySelector("img");
+
+  if (productMainImage) {
+    const lightbox = new FsLightbox();
+
+    lightbox.props.sources = [...productImages].map(
+      /** @param {HTMLImageElement} productImageBlock */
+      productImageBlock => {
+        const productImage = productImageBlock.querySelector("img");
+        const { currentSrc } = productImage;
+
+        return currentSrc;
+      }
+    );
+
+    productMainImageBlock.addEventListener("click", () => {
+      const { currentSrc: mainSrc } = productMainImage;
+      const imageIndex = [...productImages].findIndex(
+        /** @param {HTMLImageElement} productImageBlock */
+        productImageBlock => {
+          const productImage = productImageBlock.querySelector("img");
+          const { currentSrc } = productImage;
+
+          return currentSrc === mainSrc;
+        }
+      );
+
+      lightbox.open(imageIndex);
+    });
+
+    lightbox.props.onOpen = () => {
+      const instance = document.querySelector(".fslightbox-container");
+
+      instance.classList.add("product-images-gallery");
+    }
+  }
+}
+
 }();
 /******/ })()
 ;
