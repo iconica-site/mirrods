@@ -1100,7 +1100,7 @@ if (optionsForm) {
       textExamples.classList.add("show");
     });
 
-    /** @type {NodeListOf<HTMLButtonElement>} */
+    /** @type {NodeListOf<HTMLButtonElement | HTMLInputElement>} */
     const inscriptionButtons = textExamples.querySelectorAll(".example-texts__inscription");
     /** @type {HTMLDivElement} */
     const optionsExampleText = optionsForm.querySelector(".options-example__text");
@@ -1108,32 +1108,72 @@ if (optionsForm) {
     const optionsExampleInput = optionsForm.querySelector("[data-example-input]");
 
     if (inscriptionButtons && optionsExampleText && optionsExampleInput) {
+      /** @type {HTMLInputElement} */
+      const inscriptionButtonInput = [...inscriptionButtons].find(
+        /** @param {HTMLInputElement} inscriptionButton */
+        inscriptionButton => {
+          return inscriptionButton instanceof HTMLInputElement;
+        }
+      );
+      const exampleSumbitButton = textExamples.querySelector(".example-texts__button");
+
+      let exampleSumbitButtonDisableFunction;
+
+      if (inscriptionButtonInput && exampleSumbitButton) {
+        const { parentElement } = inscriptionButtonInput;
+
+        exampleSumbitButtonDisableFunction = () => {
+          const { value } = inscriptionButtonInput;
+          const valueLength = value.length;
+
+          exampleSumbitButton.toggleAttribute("disabled", !valueLength);
+        }
+
+        inscriptionButtonInput.addEventListener("input", () => {
+          const { value } = inscriptionButtonInput;
+          const { dataset } = parentElement;
+
+          dataset.count = value.length;
+        });
+
+        inscriptionButtonInput.addEventListener("focus", exampleSumbitButtonDisableFunction);
+      }
+
       textExamples.addEventListener("click", event => {
         /** @type {{target: HTMLElement}} */
         const { target } = event;
 
         if (target.closest(".example-texts__inscription")) {
-          /** @type {HTMLButtonElement} */
+          /** @type {HTMLButtonElement | HTMLInputElement} */
           const clickedButton = target.closest(".example-texts__inscription");
 
           inscriptionButtons?.forEach(button => {
             button.classList.toggle("example-texts__inscription--checked", clickedButton === button);
           });
+
+          if (typeof exampleSumbitButtonDisableFunction === "function") {
+            if (clickedButton instanceof HTMLInputElement) {
+              clickedButton.addEventListener("input", exampleSumbitButtonDisableFunction);
+            } else {
+              inscriptionButtonInput.removeEventListener("input", exampleSumbitButtonDisableFunction);
+              exampleSumbitButton.removeAttribute("disabled");
+            }
+          }
         }
 
         if (!target.closest(".example-texts__inner") || target.closest(".example-texts__close")) {
           textExamples.classList.remove("show");
         }
 
-        if (target.closest(".example-texts__button")) {
-          /** @type {HTMLButtonElement} */
+        if (target.closest(".example-texts__button:not(disabled)")) {
+          /** @type {HTMLButtonElement | HTMLInputElement} */
           const checkedButton = [...inscriptionButtons].find(
-            /** @param {HTMLButtonElement} button */
+            /** @param {HTMLButtonElement | HTMLInputElement} button */
             button => {
               return button.classList.contains("example-texts__inscription--checked");
             }
           );
-          const { innerText } = checkedButton;
+          const innerText = checkedButton instanceof HTMLButtonElement ? checkedButton.innerText : checkedButton.value;
 
           optionsExampleText.innerText = innerText;
           optionsExampleInput.value = innerText;
